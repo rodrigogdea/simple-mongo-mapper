@@ -1,17 +1,17 @@
-package org.smp;
+package org.smm;
 
 import java.util.List;
 import java.util.Random;
 
+import com.mongodb.MongoClient;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.smp.model.User;
+import org.smm.model.User;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
-import org.smm.*;
 
 public class PaginationTest {
 
@@ -21,7 +21,7 @@ public class PaginationTest {
 
     @Before
     public void before() throws Exception {
-        smpDb = new Mongo().getDB("simple-mongo-mapper");
+        smpDb = new MongoClient().getDB("simple-mongo-mapper");
         smpDb.getCollection(USER_COLL).drop();
     }
 

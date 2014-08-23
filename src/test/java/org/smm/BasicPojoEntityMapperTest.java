@@ -1,14 +1,11 @@
-package org.smp;
+package org.smm;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smm.BasicPojoEntityMapper;
-import org.smm.MappingDbObject;
-import org.smm.MongoMapper;
-import org.smp.model.SomePojo;
+import org.smm.model.SomePojo;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;

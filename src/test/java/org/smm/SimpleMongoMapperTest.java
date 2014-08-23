@@ -1,4 +1,4 @@
-package org.smp;
+package org.smm;
 
 import com.mongodb.DB;
 import com.mongodb.Mongo;

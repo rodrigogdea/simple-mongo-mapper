@@ -1,4 +1,4 @@
-package org.smp;
+package org.smm;
 
 import static org.junit.Assert.assertEquals;
 

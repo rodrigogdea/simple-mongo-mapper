@@ -1,4 +1,4 @@
-package org.smp;
+package org.smm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.mongodb.DBCollection;
-import org.smm.ListOfMappedEntityFieldBinder;
-import org.smm.SimpleEntityMapper;
 
 public class ListOfMappedEntityFieldBinderTest extends SimpleMongoMapperTest {
 

@@ -1,4 +1,4 @@
-package org.smp;
+package org.smm;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -6,8 +6,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smm.*;
-import org.smp.model.ChessBoard;
+import org.smm.model.ChessBoard;
 
 import com.mongodb.BasicDBObject;
 

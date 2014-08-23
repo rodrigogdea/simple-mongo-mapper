@@ -1,4 +1,4 @@
-package org.smp.model;
+package org.smm.model;
 
 public class User {
 
