@@ -6,6 +6,7 @@ Is a non-intrusive mongodb mapper for javan
 
 
 # 1st Case
+```scala
 case class User(name: String, age: Int)
 
 MongoMapper.register("Users, Entity[User])
@@ -14,9 +15,12 @@ val user = new User("John Coltrane", 28)
 
 // implicit DB  
 MongoMapper.for("Users").save(user)
+```
 
+```json
 
 { _id: 1234565, name: "John Coltrane", age: 28 }
+```
 
 
 # 2nd Case
