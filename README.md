@@ -6,6 +6,7 @@ Is a non-intrusive mongodb mapper for javan
 
 
 # 1st Case
+
 ```scala
 case class User(name: String, age: Int)
 
