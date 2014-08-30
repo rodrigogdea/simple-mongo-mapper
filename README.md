@@ -39,5 +39,5 @@ MongoMapper.for("Users").save(user)
 ```
 
 ```json
- { _id: 1234565, name: "John Coltrane", age: 28, { address: "Banfield" } }
+ { _id: 1234565, name: "John Coltrane", age: 28, address: { street: "Banfield" } }
 ```
