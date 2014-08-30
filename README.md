@@ -10,7 +10,7 @@ Is a non-intrusive mongodb mapper for javan
 ```scala
 case class User(name: String, age: Int)
 
-MongoMapper.register("Users, Entity[User])
+MongoMapper.register("Users", Entity[User])
 
 val user = new User("John Coltrane", 28)
 
