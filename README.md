@@ -15,7 +15,7 @@ MongoMapper.register("Users", Entity[User])
 val user = new User("John Coltrane", 28)
 
 // implicit DB  
-MongoMapper.for("Users").save(user)
+MongoMapper.for("Users").add(user)
 ```
 
 ```json
@@ -35,7 +35,7 @@ MongoMapper.register("Users", Entity[User])
 val user = User("John Coltrane", 28, Address("Banfield"))
 
 // implicit DB  
-MongoMapper.for("Users").save(user)
+MongoMapper.for("Users").add(user)
 ```
 
 ```json
