@@ -3,4 +3,5 @@
  */
 class MappedCollection(mapper: EntityMapper) {
 
+
 }

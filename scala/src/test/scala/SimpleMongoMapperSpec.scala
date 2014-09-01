@@ -18,24 +18,28 @@ import java.lang.reflect._
  */
 
 case class Address(street: String, number: Int)
+
 case class User(name: String, age: Int, address: Address)
 
 class SimpleMongoMapperSpec extends Specification {
-//  val driver: MongoDriver = new MongoDriver
-//  val connection: MongoConnection = driver.connection(List("localhost"))
-//  val db: DefaultDB = connection("simple-mongo-mapper")
-//  val collection: BSONCollection = db("test")
+  //  val driver: MongoDriver = new MongoDriver
+  //  val connection: MongoConnection = driver.connection(List("localhost"))
+  //  val db: DefaultDB = connection("simple-mongo-mapper")
+  //  val collection: BSONCollection = db("test")
 
-  "When register an Entiy in MongoMapper" should {
-
+  "When register an Entity in MongoMapper" should {
     val mongoMapper: MongoMapper = new MongoMapper()
+    mongoMapper.entity[User]()
+    "contain a MappedCollection for a collection with the same name as Entity" in {
+      mongoMapper("User") must not be null
+    }
+  }
 
-    mongoMapper.map[User]("Users")
-
+  "When register an Entity in MongoMapper to a Collection" should {
+    val mongoMapper: MongoMapper = new MongoMapper()
+    mongoMapper.entity[User]("Users")
     "contain a MappedCollection for the Entity" in {
-
       mongoMapper("Users") must not be null
     }
-
   }
 }

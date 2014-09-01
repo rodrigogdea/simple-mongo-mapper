@@ -9,11 +9,19 @@ class MongoMapper {
 
   val collections: Map[String, MappedCollection] = Map()
 
-  def map[E: TypeTag](collection: String) = {
-    val entityMapper = new EntityMapper(typeOf[E])
-    collections.put(collection, new MappedCollection(entityMapper))
-  }
+  def entity[E: TypeTag](collection: String = null) = {
 
+    val typeOfE: Type = typeOf[E]
+    val entityMapper = new EntityMapper(typeOfE)
+    val mappedCollection: MappedCollection = new MappedCollection(entityMapper)
+
+    val name = Option(collection) match {
+      case Some(name) => name
+      case None => typeOfE.toString
+    }
+    collections.put(name, mappedCollection)
+
+  }
 
   def apply(collection: String): MappedCollection = {
       collections(collection)
