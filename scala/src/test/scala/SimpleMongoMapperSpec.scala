@@ -1,6 +1,5 @@
 import java.util.concurrent.TimeUnit
 
-import akka.actor.FSM.Failure
 import org.specs2.mutable.Specification
 import reactivemongo.api._
 import reactivemongo.api.collections.default.BSONCollection
@@ -11,28 +10,32 @@ import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Success
 
+
+import java.lang.reflect._
+
 /**
  * Created by rodrigo.gdea@gmail.com on 28/08/14.
  */
+
+case class Address(street: String, number: Int)
+case class User(name: String, age: Int, address: Address)
+
 class SimpleMongoMapperSpec extends Specification {
-  "The 'Hello world' string" should {
-    "contain 11 characters" in {
-      val driver: MongoDriver = new MongoDriver
-      val connection: MongoConnection = driver.connection(List("localhost"))
-      val db: DefaultDB = connection("simple-mongo-mapper")
-      val collection: BSONCollection = db("test")
-      val insert: Future[LastError] = collection.insert(BSONDocument("firstName" -> "Test"))
-      insert.onComplete( x => println(s"${x}\n"))
+//  val driver: MongoDriver = new MongoDriver
+//  val connection: MongoConnection = driver.connection(List("localhost"))
+//  val db: DefaultDB = connection("simple-mongo-mapper")
+//  val collection: BSONCollection = db("test")
 
-      Await.ready(insert, Duration(2, TimeUnit.SECONDS))
+  "When register an Entiy in MongoMapper" should {
 
-      "Hello world" must have size (11)
+    val mongoMapper: MongoMapper = new MongoMapper()
+
+    mongoMapper.map[User]("Users")
+
+    "contain a MappedCollection for the Entity" in {
+
+      mongoMapper("Users") must not be null
     }
-    "start with 'Hello'" in {
-      "Hello world" must startWith("Hello")
-    }
-    "end with 'world'" in {
-      "Hello world" must endWith("world")
-    }
+
   }
 }
