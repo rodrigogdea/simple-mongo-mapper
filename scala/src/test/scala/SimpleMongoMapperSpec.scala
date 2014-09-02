@@ -1,17 +1,4 @@
-import java.util.concurrent.TimeUnit
-
 import org.specs2.mutable.Specification
-import reactivemongo.api._
-import reactivemongo.api.collections.default.BSONCollection
-import reactivemongo.bson.BSONDocument
-import reactivemongo.core.commands.LastError
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Future, Await}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.Success
-
-
-import java.lang.reflect._
 
 /**
  * Created by rodrigo.gdea@gmail.com on 28/08/14.
@@ -29,7 +16,7 @@ class SimpleMongoMapperSpec extends Specification {
 
   "When register an Entity in MongoMapper" should {
     val mongoMapper: MongoMapper = new MongoMapper()
-    mongoMapper.entity[User]()
+    mongoMapper.entity[User]
     "contain a MappedCollection for a collection with the same name as Entity" in {
       mongoMapper("User") must not be null
     }

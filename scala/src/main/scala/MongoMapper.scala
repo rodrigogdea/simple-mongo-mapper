@@ -9,6 +9,8 @@ class MongoMapper {
 
   val collections: Map[String, MappedCollection] = Map()
 
+  def entity[E: TypeTag](): Unit = entity[E](null)
+
   def entity[E: TypeTag](collection: String = null) = {
 
     val typeOfE: Type = typeOf[E]
@@ -24,6 +26,6 @@ class MongoMapper {
   }
 
   def apply(collection: String): MappedCollection = {
-      collections(collection)
+    collections(collection)
   }
 }
