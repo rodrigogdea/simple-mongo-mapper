@@ -1,11 +1,12 @@
 import scala.collection.mutable.Map
+import scala.concurrent.ExecutionContext
 import scala.reflect.runtime.universe._
 
 
 /**
  * Created by rodrigo on 31/08/14.
  */
-class MongoMapper {
+class MongoMapper(implicit ec: ExecutionContext) {
 
   val collections: Map[String, MappedCollection] = Map()
 
@@ -15,13 +16,12 @@ class MongoMapper {
 
     val typeOfE: Type = typeOf[E]
     val entityMapper = new EntityMapper(typeOfE)
-    val mappedCollection: MappedCollection = new MappedCollection(entityMapper)
 
     val name = Option(collection) match {
       case Some(name) => name
       case None => typeOfE.toString
     }
-    collections.put(name, mappedCollection)
+    collections.put(name, new MappedCollection(name, entityMapper))
 
   }
 
