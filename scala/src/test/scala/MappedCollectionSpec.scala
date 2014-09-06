@@ -5,10 +5,9 @@ import org.specs2.mutable.Specification
 import reactivemongo.api._
 import reactivemongo.api.collections.default.BSONCollection
 import reactivemongo.bson.BSONDocument
-import reactivemongo.core.commands.Count
 
-import scala.concurrent.Await
-import scala.concurrent.duration.{FiniteDuration, Duration}
+import scala.concurrent.duration.{Duration, FiniteDuration}
+import scala.concurrent.{Await, Future}
 
 
 class MappedCollectionSpec extends Specification with Mockito {
@@ -25,17 +24,25 @@ class MappedCollectionSpec extends Specification with Mockito {
   val bsonCollection: BSONCollection =  db(aCollectionName)
   Await.ready(bsonCollection.remove(BSONDocument.empty), oneSec)
 
+  val mappedCollection = new MappedCollection(aCollectionName, anEntityMapper)
+
   "When add a new User to the collection" should {
+    val user: User = User("Test", 28, Address("St", 23))
 
+    val add: Future[Either[ObjectRef, OperationFailed]] = mappedCollection.add(user)
 
-    val mappedCollection = new MappedCollection(aCollectionName, anEntityMapper)
-    mappedCollection.add(User("Test", 28, Address("St", 23)))
+    val result: Either[ObjectRef, OperationFailed] = Await.result(add, oneSec)
 
-    "contains the new User" in {
-      //TODO Verify that the new User was inserted
+    "toDocument method must be called on EntityMapper" in {
       there was one(anEntityMapper).toDocument(any[User])
+    }
 
-      Await.result(db.command(Count(aCollectionName)).map( count => count == 1), oneSec)
+    "successful operation" in {
+      result.isLeft
+    }
+
+    "contains one element" in {
+      Await.result( mappedCollection.count(), oneSec) == 1
     }
   }
 

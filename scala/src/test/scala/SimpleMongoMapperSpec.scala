@@ -9,10 +9,6 @@ case class Address(street: String, number: Int)
 case class User(name: String, age: Int, address: Address)
 
 class SimpleMongoMapperSpec extends Specification {
-  //  val driver: MongoDriver = new MongoDriver
-  //  val connection: MongoConnection = driver.connection(List("localhost"))
-  //  val db: DefaultDB = connection("simple-mongo-mapper")
-  //  val collection: BSONCollection = db("test")
 
   "When register an Entity in MongoMapper" should {
     val mongoMapper: MongoMapper = new MongoMapper()
