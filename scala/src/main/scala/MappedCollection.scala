@@ -14,7 +14,7 @@ case class OperationFailed(lastError: String)
 case class ObjectRef(id: String, anObject: AnyRef)
 
 
-class MappedCollection(val collectionName: String, val mapper: EntityMapper)(implicit ec: ExecutionContext) {
+class MappedCollection[E](val collectionName: String, val mapper: EntityMapper[E])(implicit ec: ExecutionContext) {
 
 
   def count()(implicit db: DB): Future[Int] = db.command(Count(collectionName))

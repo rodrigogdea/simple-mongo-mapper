@@ -20,7 +20,7 @@ class MappedCollectionSpec extends Specification with Mockito with NoTimeConvers
 
   val user: User = User("Test", 28, Address("St", 23))
 
-  val anEntityMapper = mock[EntityMapper]
+  val anEntityMapper = mock[EntityMapper[User]]
   anEntityMapper.toDocument(any[User]) returns BSONDocument.empty
   anEntityMapper.toObject(any[BSONDocument]) returns user
 
