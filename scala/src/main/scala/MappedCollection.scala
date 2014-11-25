@@ -11,7 +11,7 @@ import scala.concurrent.{Future, ExecutionContext}
 
 case class OperationFailed(lastError: String)
 
-case class ObjectRef(id: String, anObject: AnyRef)
+case class ObjectRef[E](id: String, anEntity: E)
 
 
 class MappedCollection[E](val collectionName: String, val mapper: EntityMapper[E])(implicit ec: ExecutionContext) {
@@ -25,7 +25,7 @@ class MappedCollection[E](val collectionName: String, val mapper: EntityMapper[E
    * @param db The database used to add the new Object to the Collection
    * @return if add operation do not fail, the future will return the Object Reference to the new Object
    */
-  def add(anObject: AnyRef)(implicit db: DB): Future[Either[ObjectRef, OperationFailed]] = {
+  def add(anObject: E)(implicit db: DB): Future[Either[ObjectRef[E], OperationFailed]] = {
     val collection: BSONCollection = db(collectionName)
 
     val toDocument: BSONDocument = mapper.toDocument(anObject)
@@ -40,7 +40,7 @@ class MappedCollection[E](val collectionName: String, val mapper: EntityMapper[E
   }
 
 
-  def get(id: String)(implicit db: DB): Future[Either[ObjectRef, OperationFailed]] = {
+  def get(id: String)(implicit db: DB): Future[Either[ObjectRef[E], OperationFailed]] = {
     val collection: BSONCollection = db(collectionName)
 
     collection.find(BSONDocument("_id" -> BSONObjectID(id))).one[BSONDocument].map {

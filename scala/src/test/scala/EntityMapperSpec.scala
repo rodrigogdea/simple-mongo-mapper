@@ -1,6 +1,5 @@
-import org.specs2.matcher.MatchFailure
 import org.specs2.mutable.Specification
-import reactivemongo.bson.{BSONInteger, BSONString, BSONDocument}
+import reactivemongo.bson.BSONDocument
 
 import scala.reflect.ClassTag
 
@@ -15,16 +14,17 @@ class EntityMapperSpec extends Specification {
 
     "Convert an instance of Product to BSONDoc" in {
 
-      val product: Product = Product("Buje", "Un Buje")
+      val product: Product = Product("Buje", "Un Buje", 23, 234.56)
       val document: BSONDocument = entityMapper.toDocument(product)
 
       document.getAs[String]("name").get  must be equalTo product.name
       document.getAs[String]("description").get must be equalTo product.description
-//      document.getAs[Int]("count").get must be equalTo product.count
+      document.getAs[Int]("stock").get must be equalTo product.stock
+      document.getAs[Double]("price").get must be equalTo product.price
     }
   }
 
 }
 
 
-case class Product(name: String, description: String)
+case class Product(name: String, description: String, stock: Int, price: Double)
