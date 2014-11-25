@@ -10,7 +10,7 @@ import scala.concurrent._
 
 
 class MappedCollectionSpec extends Specification with Mockito with NoTimeConversions {
-  val oneSec = 1 seconds
+  val oneSec = 1.seconds
 
   val aCollectionName: String = "myCollection"
   val driver: MongoDriver = new MongoDriver

@@ -1,7 +1,6 @@
 import scala.collection.mutable.Map
 import scala.concurrent.ExecutionContext
 import scala.reflect.ClassTag
-import scala.reflect.runtime.universe._
 
 
 /**
@@ -19,7 +18,7 @@ class MongoMapper(implicit ec: ExecutionContext) {
     val entityMapper = new EntityMapper(classTag)
 
     val name = Option(collection) match {
-      case Some(name) => name
+      case Some(aName) => aName
       case None => classTag.runtimeClass.getSimpleName
     }
     collections.put(name, new MappedCollection(name, entityMapper))
