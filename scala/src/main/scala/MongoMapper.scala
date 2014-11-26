@@ -15,7 +15,7 @@ class MongoMapper(implicit ec: ExecutionContext) {
   def entity[E: ClassTag](collection: String = null) = {
 
     val classTag: ClassTag[E] = implicitly[ClassTag[E]]
-    val entityMapper = EntityMapper(classTag.runtimeClass)q
+    val entityMapper = EntityMapper(classTag.runtimeClass)
 
     val name = Option(collection) match {
       case Some(aName) => aName
