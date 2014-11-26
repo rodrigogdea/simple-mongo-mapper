@@ -10,7 +10,8 @@ class EntityMapperSpec extends Specification {
 
   "When create an EntityMapper for Type Product" should {
 
-    val entityMapper: EntityMapper[Product] = new EntityMapper(implicitly[ClassTag[Product]])
+    val runtimeClass = implicitly[ClassTag[Product]].runtimeClass.asInstanceOf[Class[Product]]
+    val entityMapper = EntityMapper(runtimeClass)
 
     "Convert an instance of Product to BSONDoc" in {
 

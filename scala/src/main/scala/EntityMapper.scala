@@ -1,15 +1,16 @@
-import java.lang.reflect.{Constructor, Method, Field}
+import java.lang.reflect.{Constructor, Field, Method}
 
-import reactivemongo.bson.Producer.NameOptionValueProducer
 import reactivemongo.bson._
-
-import scala.reflect.ClassTag
 
 /**
  * Created by rodrigo on 31/08/14.
  */
 
 object EntityMapper {
+
+  def apply[E](aTypeToMap: Class[E]): EntityMapper[E] = {
+    EntityMapper[E](aTypeToMap, extracMappedFields(aTypeToMap))
+  }
 
   def extracMappedFields[E](aTypeToMap: Class[E]): Seq[MappedField[E]] = {
     val constructor: Constructor[_] = aTypeToMap.getConstructors.apply(0)
@@ -22,14 +23,8 @@ object EntityMapper {
 
 }
 
-class EntityMapper[E](aTypeToMap: ClassTag[E], mappedFields: Seq[MappedField[E]]) {
-
-  private implicit val runtimeClass: Class[E] = aTypeToMap.runtimeClass.asInstanceOf[Class[E]]
+case class EntityMapper[E](runtimeClass: Class[E], mappedFields: Seq[MappedField[E]]) {
   val constructor: Constructor[_] = runtimeClass.getConstructors.apply(0)
-
-  def this(aTypeToMap: ClassTag[E]) {
-    this(aTypeToMap, EntityMapper.extracMappedFields(aTypeToMap.runtimeClass.asInstanceOf[Class[E]]))
-  }
 
   def toObject(document: BSONDocument): E = {
     val params = mappedFields.foldLeft(Seq[Object]())((seq, mappedField) => seq :+ mappedField(document).asInstanceOf[Object])
@@ -37,11 +32,9 @@ class EntityMapper[E](aTypeToMap: ClassTag[E], mappedFields: Seq[MappedField[E]]
   }
 
   def toDocument(anObject: E): BSONDocument = {
-
     val bsonValues = mappedFields.foldLeft(Seq[(String, BSONValue)]()) { (seq, mappedField) =>
-      seq.:+(mappedField.name -> mappedField(anObject))
+      seq.:+(mappedField.name -> mappedField(anObject, runtimeClass))
     }
-
     BSONDocument(bsonValues)
   }
 }
@@ -59,7 +52,7 @@ case class MappedField[E](field: Field) {
     }
   }
 
-  def apply(anEntity: E)(implicit runtimeClass: Class[_]): BSONValue = {
+  def apply(anEntity: E, runtimeClass: Class[E]): BSONValue = {
     val method: Method = runtimeClass.getMethod(name)
     val value: Any = method.invoke(anEntity)
     value match {
