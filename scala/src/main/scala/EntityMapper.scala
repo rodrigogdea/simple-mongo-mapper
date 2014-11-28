@@ -9,21 +9,30 @@ import reactivemongo.bson._
 object EntityMapper {
 
   def apply[E](aTypeToMap: Class[E]): EntityMapper[E] = {
-    EntityMapper[E](aTypeToMap, extracMappedFields(aTypeToMap))
+    EntityMapper[E](aTypeToMap, extractMappedFields(aTypeToMap))
   }
 
-  def extracMappedFields[E](aTypeToMap: Class[E]): Seq[MappedField[E]] = {
+  def extractMappedFields[E](aTypeToMap: Class[E]): Seq[MappedField[E, _, _ <: BSONValue]] = {
     val constructor: Constructor[_] = aTypeToMap.getConstructors.apply(0)
-    val length: Int = constructor.getParameterTypes.length
+    val maxArguments: Int = constructor.getParameterTypes.length
 
-    aTypeToMap.getDeclaredFields.foldLeft(Seq[MappedField[E]]()) { (seq, field) =>
-      if (seq.size < length) seq.:+(MappedField(field)) else seq
+    aTypeToMap.getDeclaredFields.foldLeft(Seq[MappedField[E, _, _<: BSONValue]]()) { (seq, field) =>
+      if (seq.size < maxArguments) {
+
+        val mappedField = field.getType match {
+          case c if c == classOf[Int] => IntMappedField[E](field)
+          case c if c == classOf[String] => StringMappedField[E](field)
+          case c if c == classOf[Double] => DoubleMappedField[E](field)
+        }
+
+        seq.:+(mappedField)
+      } else seq
     }
   }
 
 }
 
-case class EntityMapper[E](runtimeClass: Class[E], mappedFields: Seq[MappedField[E]]) {
+case class EntityMapper[E](runtimeClass: Class[E], mappedFields: Seq[MappedField[E, _, _ <: BSONValue]]) {
   val constructor: Constructor[_] = runtimeClass.getConstructors.apply(0)
 
   def toObject(document: BSONDocument): E = {
@@ -40,26 +49,4 @@ case class EntityMapper[E](runtimeClass: Class[E], mappedFields: Seq[MappedField
 }
 
 
-case class MappedField[E](field: Field) {
-  val name = field.getName
 
-  def apply(document: BSONDocument): Any = {
-    field.getType match {
-      case c if c == classOf[Int] => document.getAs[Int](name).getOrElse()
-      case c if c == classOf[String] => document.getAs[String](name).getOrElse()
-      case c if c == classOf[Double] => document.getAs[Double](name).getOrElse()
-      case _ => None
-    }
-  }
-
-  def apply(anEntity: E, runtimeClass: Class[E]): BSONValue = {
-    val method: Method = runtimeClass.getMethod(name)
-    val value: Any = method.invoke(anEntity)
-    value match {
-      case v: Int => BSONInteger(method.invoke(anEntity).asInstanceOf[Int])
-      case v: Double => BSONDouble(method.invoke(anEntity).asInstanceOf[Double])
-      case v: String => BSONString(method.invoke(anEntity).asInstanceOf[String])
-      case _ => BSONNull
-    }
-  }
-}
