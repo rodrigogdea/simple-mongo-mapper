@@ -12,24 +12,24 @@ abstract class MappedField[E, V <: Any, J <: BSONValue](field: Field) {
 
   def apply(anEntity: E, runtimeClass: Class[E]): J
 
-  def getValue(anEntity: E, runtimeClass: Class[E]): Any = {
+  def getValue(anEntity: E, runtimeClass: Class[E]): V = {
     val method: Method = runtimeClass.getMethod(name)
-    method.invoke(anEntity)
+    method.invoke(anEntity).asInstanceOf[V]
   }
 
 }
 
-case class IntMappedField[E](field: Field) extends MappedField[E, Int, BSONInteger](field) {
+case class MappedFieldInt[E](field: Field) extends MappedField[E, Int, BSONInteger](field) {
   override def apply(document: BSONDocument): Int = document.getAs[Int](name).get
-  override def apply(anEntity: E, runtimeClass: Class[E]): BSONInteger = BSONInteger(getValue(anEntity, runtimeClass).asInstanceOf[Int])
+  override def apply(anEntity: E, runtimeClass: Class[E]): BSONInteger = BSONInteger(getValue(anEntity, runtimeClass))
 }
 
-case class DoubleMappedField[E](field: Field) extends MappedField[E, Double, BSONDouble](field) {
+case class MappedFieldDouble[E](field: Field) extends MappedField[E, Double, BSONDouble](field) {
   override def apply(document: BSONDocument): Double = document.getAs[Double](name).get
-  override def apply(anEntity: E, runtimeClass: Class[E]): BSONDouble = BSONDouble(getValue(anEntity, runtimeClass).asInstanceOf[Double])
+  override def apply(anEntity: E, runtimeClass: Class[E]): BSONDouble = BSONDouble(getValue(anEntity, runtimeClass))
 }
-
-case class StringMappedField[E](field: Field) extends MappedField[E, String, BSONString](field) {
+uc
+case class MappedFieldString[E](field: Field) extends MappedField[E, String, BSONString](field) {
   override def apply(document: BSONDocument): String = document.getAs[String](name).get
-  override def apply(anEntity: E, runtimeClass: Class[E]): BSONString = BSONString(getValue(anEntity, runtimeClass).asInstanceOf[String])
+  override def apply(anEntity: E, runtimeClass: Class[E]): BSONString = BSONString(getValue(anEntity, runtimeClass))
 }
